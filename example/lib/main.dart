@@ -12,7 +12,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  static bool _platformVersion ;
 
   @override
   void initState() {
@@ -22,12 +22,15 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
+    bool platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await PluginMediaFinder.platformVersion;
+      platformVersion = await PluginMediaFinder.platPermissionState;
+        print(platformVersion ? "Granted" : "Denied");
+
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+    //  platformVersion = 'Failed to get platform version.';
+    print('Exception checking permission !');
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -48,7 +51,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text(_platformVersion ? "Granted" : "Denied"),
         ),
       ),
     );

@@ -3,11 +3,15 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class PluginMediaFinder {
-  static const MethodChannel _channel =
-      const MethodChannel('plugin_media_finder');
+  static const MethodChannel _channel = const MethodChannel('plugin_media_finder');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
+  /*
+   * This should return bool wheter permission granted or denied
+   * but i dont know why it throws an Exception !!
+   */
+  static Future<bool> get platPermissionState async {
+    final bool version = await _channel.invokeMethod('getPermissionState');
+    print(version);
     return version;
   }
 }
