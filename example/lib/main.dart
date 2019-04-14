@@ -12,7 +12,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static bool _platformVersion ;
+  static String permissionStateMessage = "NULL" ;
 
   @override
   void initState() {
@@ -22,11 +22,14 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    bool platformVersion;
+    bool permissionState;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await PluginMediaFinder.platPermissionState;
-        print(platformVersion ? "Granted" : "Denied");
+      permissionState = await PluginMediaFinder.platPermissionState;
+        print(permissionState ? "Granted" : "Denied");
+
+        if(permissionState) permissionStateMessage = "Permission Granted";
+        else permissionStateMessage = "Permission Denied";
 
     } on PlatformException {
     //  platformVersion = 'Failed to get platform version.';
@@ -38,9 +41,6 @@ class _MyAppState extends State<MyApp> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text(_platformVersion ? "Granted" : "Denied"),
+          child: Text(permissionStateMessage),
         ),
       ),
     );

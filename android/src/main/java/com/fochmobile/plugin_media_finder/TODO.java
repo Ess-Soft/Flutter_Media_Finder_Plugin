@@ -5,7 +5,7 @@ public class TODO {
 
     //todo permissions
     /**
-     * bool checkPermission() => true == Granted | false == Denied
+     * bool checkStoragePermissions() => true == Granted | false == Denied
      *
      */
 
