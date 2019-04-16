@@ -54,10 +54,10 @@ public class PluginMediaFinderPlugin implements MethodCallHandler, PluginRegistr
                     // permission isn't granted we should first request it and then load songs
                     PermissionHandler.requestStoragePermission(activity, PermissionHandler.STORAGE_REQUEST_CODE);
                 }
-                result.success(true);
+                result.success(AudioUtils.getAllMusic(activity));
                 break;
             case "getStoragePermissionState":
-
+                result.success(PermissionHandler.getStoragePermissionState(activity));
                 break;
             default:
                 result.notImplemented();
