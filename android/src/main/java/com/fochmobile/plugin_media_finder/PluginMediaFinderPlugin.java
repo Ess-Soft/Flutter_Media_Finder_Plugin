@@ -5,7 +5,11 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.fochmobile.plugin_media_finder.model.Music;
+import com.fochmobile.plugin_media_finder.utils.AudioUtils;
 import com.fochmobile.plugin_media_finder.utils.PermissionHandler;
+
+import java.util.List;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -41,20 +45,36 @@ public class PluginMediaFinderPlugin implements MethodCallHandler, PluginRegistr
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
-        if (call.method.equals("getPermissionState")) {
-            result.success(PermissionHandler.checkStoragePermissions(activity, PermissionHandler.STORAGE_REQUEST_CODE));
-        } else {
-            result.notImplemented();
+        switch (call.method) {
+            case "getAllSongs":
+                if (PermissionHandler.getStoragePermissionState(activity)) {
+                    // permission is granted... just load all songs !
+                    AudioUtils.getAllMusic(activity);
+                } else {
+                    // permission isn't granted we should first request it and then load songs
+                    PermissionHandler.requestStoragePermission(activity, PermissionHandler.STORAGE_REQUEST_CODE);
+                }
+                result.success(true);
+                break;
+            case "getStoragePermissionState":
+
+                break;
+            default:
+                result.notImplemented();
+                break;
         }
     }
 
+
+
     @Override
     public boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        for (int i : grantResults) {
-            if (i == PackageManager.PERMISSION_DENIED) {
-                return false;
-            }
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.e("==>RequestPermissions", "Permission: " + permissions[0] + "was " + grantResults[0]);
+            //Permission granted... resuming tasks needing this permission
+            AudioUtils.getAllMusic(activity);
+            return true;
         }
-        return true;
+        return false;
     }
 }

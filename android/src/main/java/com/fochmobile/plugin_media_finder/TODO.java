@@ -5,7 +5,19 @@ public class TODO {
 
     //todo permissions
     /**
+     * @Deperecated
      * bool checkStoragePermissions() => true == Granted | false == Denied
+     *
+     * Checking permission and waiting for response (bool) is not "possible" because "I think"
+     * there wouldn't be a way to wait for onRequestPermissionsResult as a result here is the new
+     * adapter approach:
+     *
+     * List<Music> getAllSongs(boolean loadAfterPermissionGranted)
+     * this function will first check for permission :
+     * Scenario 1: check for permission -> if already granted -> load Music
+     * Scenario 2: check for permission -> if its not granted -> request it -> if granted -> load Music | if Denied -> return null
+     * so Dart will wait for List<Music> if it was returned not null then all is OK | if it was returned null means user Denied
+     * the permission hence we'll show an explanation Dialog with a Allow Button if Allow btn clicked then repeat this whole approach.
      *
      */
 

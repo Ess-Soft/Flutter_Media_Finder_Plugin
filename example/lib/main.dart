@@ -41,6 +41,9 @@ class _MyAppState extends State<MyApp> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
+    setState(() {
+      permissionStateMessage = permissionState ? 'YES' : 'NO';
+    });
   }
 
   @override
