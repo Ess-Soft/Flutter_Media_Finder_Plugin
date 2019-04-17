@@ -9,7 +9,10 @@ import com.fochmobile.plugin_media_finder.model.Music;
 import com.fochmobile.plugin_media_finder.utils.AudioUtils;
 import com.fochmobile.plugin_media_finder.utils.PermissionHandler;
 import com.fochmobile.plugin_media_finder.utils.VideoUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.flutter.plugin.common.MethodCall;
@@ -48,7 +51,20 @@ public class PluginMediaFinderPlugin implements MethodCallHandler, PluginRegistr
                     // permission is granted... just load all songs !
                     Log.e(TAG, "Permission is granted !");
 
-                    result.success(AudioUtils.getAllMusic(activity));
+                    ArrayList<String> musicsList = new ArrayList<>();
+                    List<Music> musics = AudioUtils.getAllMusic(activity);
+
+                    // Here we use Gson to convert Music object to json (type String)
+                    // Cuz we can't send custom objects with result.success method
+                    Gson gson = new GsonBuilder().create();
+
+                    if (musics != null) {
+                        for(Music m : musics) {
+                            musicsList.add(gson.toJson(m));
+                        }
+                    }
+
+                    result.success(musicsList);
                 } else {
                     // permission isn't granted we should first request it and then load songs
                     Log.e(TAG, "Permission is denied !");

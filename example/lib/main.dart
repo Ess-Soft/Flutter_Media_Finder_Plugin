@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:plugin_media_finder/model/Music.dart';
 import 'package:plugin_media_finder/plugin_media_finder.dart';
+import 'package:plugin_media_finder_example/blocs/musics_list_bloc.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,14 +16,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   static String permissionStateMessage = "NULL" ;
 
+  MusicsListBloc musicsListBloc;
+
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    initPermissionState();
+    musicsListBloc = MusicsListBloc();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
+  Future<void> initPermissionState() async {
     bool permissionState;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
@@ -53,8 +58,25 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text(permissionStateMessage),
+        body: ListView(
+          children: <Widget>[
+            Text("Storage permission state : $permissionStateMessage"),
+            StreamBuilder(
+              stream: musicsListBloc.musicsList,
+              initialData: <Music>[],
+              builder: (BuildContext context, AsyncSnapshot<List<Music>> snapshot) {
+                List<Widget> musicsList = List();
+                if (snapshot.data != null) {
+                  for(Music music in snapshot.data) {
+                    musicsList.add(Text("Music: ${music.title}"));
+                  }
+                  return Column(children: musicsList,);
+                } else {
+                  return Center(child: Text("No music :/\nWhy ?! I don't know"),);
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
