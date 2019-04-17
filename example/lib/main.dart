@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
     bool permissionState;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      permissionState = await PluginMediaFinder.platPermissionState;
+      permissionState = await PluginMediaFinder.getStoragePermissionState;
         print(permissionState ? "Granted" : "Denied");
 
         if(permissionState) permissionStateMessage = "Permission Granted";

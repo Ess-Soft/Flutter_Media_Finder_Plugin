@@ -8,6 +8,7 @@ import android.util.Log;
 import com.fochmobile.plugin_media_finder.model.Music;
 import com.fochmobile.plugin_media_finder.utils.AudioUtils;
 import com.fochmobile.plugin_media_finder.utils.PermissionHandler;
+import com.fochmobile.plugin_media_finder.utils.VideoUtils;
 
 import java.util.List;
 
@@ -20,11 +21,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** PluginMediaFinderPlugin */
 public class PluginMediaFinderPlugin implements MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
-    private static final int setMethodCallHandler = 3777;
-
-
-    private boolean executeAfterPermissionGranted;
-    private Result pendingResult;
+    private String TAG = PluginMediaFinderPlugin.class.getSimpleName();
 
     private Activity activity;
     private static PluginMediaFinderPlugin instance;
@@ -49,14 +46,20 @@ public class PluginMediaFinderPlugin implements MethodCallHandler, PluginRegistr
             case "getAllSongs":
                 if (PermissionHandler.getStoragePermissionState(activity)) {
                     // permission is granted... just load all songs !
-                    AudioUtils.getAllMusic(activity);
+                    Log.e(TAG, "Permission is granted !");
+
+                    result.success(AudioUtils.getAllMusic(activity));
                 } else {
                     // permission isn't granted we should first request it and then load songs
+                    Log.e(TAG, "Permission is denied !");
                     PermissionHandler.requestStoragePermission(activity, PermissionHandler.STORAGE_REQUEST_CODE);
                 }
-                result.success(AudioUtils.getAllMusic(activity));
+                break;
+            case "getAllVideos":
+
                 break;
             case "getStoragePermissionState":
+               // VideoUtils.getAllVideos(activity);
                 result.success(PermissionHandler.getStoragePermissionState(activity));
                 break;
             default:

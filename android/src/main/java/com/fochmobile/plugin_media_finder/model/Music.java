@@ -1,6 +1,5 @@
 package com.fochmobile.plugin_media_finder.model;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 public class Music {
